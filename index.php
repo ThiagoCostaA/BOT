@@ -107,7 +107,7 @@ if($status == 2){
         $resposta = $menu2 ;
 
         #Inseri o número do pedido para o cliente
-        $sql = "INSERT INTO pedido (num_pedido, telefone, status_pedido) VALUES ('$pedido', '$telefone_cliente', '$status_pedido_padrao')";
+        $sql = "INSERT INTO pedido (num_pedido, telefone, status_pedido, data) VALUES ('$pedido', '$telefone_cliente', '$status_pedido_padrao', '$data')";
         $query = mysqli_query($conn, $sql);
     }
 
@@ -116,7 +116,7 @@ if($status == 2){
         echo $pizza_doce;
 
         #Inseri o número do pedido para o cliente
-        $sql = "INSERT INTO pedido (num_pedido, telefone, status_pedido) VALUES ('$pedido', '$telefone_cliente', '$status_pedido_padrao')";
+        $sql = "INSERT INTO pedido (num_pedido, telefone, status_pedido, data) VALUES ('$pedido', '$telefone_cliente', '$status_pedido_padrao', '$data')";
         $query = mysqli_query($conn, $sql);
 
         $sql = "UPDATE usuario SET status = '18' WHERE telefone = '$telefone_cliente'";
@@ -189,7 +189,7 @@ if($status == 17){
         echo "Atendimento encerrado, obrigado pelo contato.";
     }
     elseif($dados == ''){
-        echo 'Código não localizado nos informe o código correto ou nos envie *4* para encerrar o atedimento';
+        echo '\nCódigo não localizado nos informe o código correto ou nos envie *4* para encerrar o atedimento';
   
         $sql = "UPDATE usuario SET status = '17' WHERE telefone = '$telefone_cliente'";
         $query = mysqli_query($conn, $sql);
@@ -617,9 +617,6 @@ if($status < 8){
     $sql = "UPDATE usuario SET status = '$status2' WHERE telefone = '$telefone_cliente'";
     $query = mysqli_query($conn, $sql);
 }
-
- #Zerar voltar o status do cliente para conseguirmos realizar um novo atendimento
-
 
  #Cancela o pedido e encerra o atendimento
 
