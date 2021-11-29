@@ -1,27 +1,21 @@
 UNIVERSIDADE NOVE DE JULHO
 DIRETORIA DOS CURSOS DE INFORMÁTICA
-  
- 
  
 PROJETO EM COMPUTAÇÃO APLICADA:
 CHATBOT
 SÃO PAULO
 2021
 
-
 PROJETO EM COMPUTAÇÃO APLICADA:
 CHATBOT
  
-
 Trabalho apresentado à Universidade Nove de Julho, UNINOVE, em cumprimento parcial às exigências da disciplina de Projeto em computação aplicada, sob orientação do Prof. Edson Melo de Souza
- 
  
 RESUMO
  
 Esse projeto visa em expandir e facilitar a comunicação entre cliente e restaurante no ramo das pizzarias, além de diminuir a alta demanda de atendimentos por telefone. A criação de um chatbot para automatizar o atendimento ao cliente de uma forma rápida e prática e nas separações dos pedidos.
 Palavras-chave: chatbot, pizzaria, atendimento
  
-
 1.            OBJETIVO
  
 A elaboração do chatbot  da Pizzaria TNR, foi desenvolvido pela plataforma do Whatsapp Business, com a finalidade em atribuir praticidade e autoatendimento, e tornando mais prático e rápido, sem a necessidade do cliente entrar em contato por ligação com o estabelecimento ou até mesmo se deslocar fisicamente ao local e ficar na fila de espera.
@@ -29,8 +23,6 @@ Esse tipo de recurso facilita na operação diária pois ele faz com que seja pa
  
 Link – da imagem do mapa mental 
 file:///C:/Users/alcid/OneDrive/Imagens/Pizzaria%20TNR.pdf%20chatbot.pdf
- 
- 
   
 2.     	CHATBOT
  
@@ -45,21 +37,11 @@ Demonstração ilustrativa de comando do chatbot:
  
 •      	Ao mandar qualquer escrita no chat o atendimento é iniciado (imagem)
  
- 
 •      	Caso o cliente mande alguma escrita não compreendida, uma mensagem de (imagem)
- 
- 
  
 •      	Pós completar a escolha dos itens, será solicitado o endereço e a forma de pagamento.  (imagem)
  
- 
- 
- 
- 
- 
 •      	Ao finalizar o pedido, será enviado o código de rastreio, possibilitando verificar o andamento e produção. (imagem)
- 
-  
  
 3.     	SITE    -   (Podemos incluir imagens)
  
@@ -124,9 +106,3 @@ file:///C:/Users/alcid/OneDrive/Imagens/Pizzaria%20TNR.pdf%20chatbot.pdf
 https://github.com/ThiagoCostaA/BOT
  
 5.     	REFERÊNCIAS
- 
- 
- 
- 
- 
-
