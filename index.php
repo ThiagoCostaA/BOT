@@ -40,7 +40,7 @@ $menu7 = "Ok muito obrigado, pedido registrado \n";
 
 $pizza_doce = 
 
-"\n*Nos informe o código da pizza de sua prereência:*
+"\n*Nos informe o código da pizza de sua preferência:*
 
 *3010* - Pizza de Abacaxi c/ Coco *R$40,00*                                                                                                  *3011* - Pizza de Chocolate c/ Banana *R$35,99*                                                                                                  *3012* - Pizza de Chocolate c/ Morango *R$49,90*                                                                                                  *3013* - Pizza de Chocolate c/ M&M’s *R$40,00*                                                                                                  *3014* - Pizza de Chocolate Branco c/ M&M’s *R$35,99*                                                                                                  *3015* - Pizza de Banana c/ Canela *R$49,90*";
 
@@ -356,6 +356,9 @@ if($status == 7){
 
         echo "\nO preco total do pedido em ficou em *R$$preco_atual*";
 
+        $sql = "UPDATE pedido SET valor_pedido = '$preco_atual' WHERE num_pedido = '$pedido_atual'";
+        $query = mysqli_query($conn, $sql);
+
         echo "\nAgora só resta esperar e apreciar sua refeição quando chegar                                                                                               Nosso prazo de entrega é de 40/50 minutos.";
         echo "\nQualquer dúvida sobre o pedido, entraremos em contato";
         echo "\nDigite *3* para *cancelar* o seu pedido.                                                                                                  Digite *4* para *encerrar* o atendimento.                                                                                                  Digite *5* para *consultar* o status do seu último pedido.                                                                                                  Digite *6* para abrir o menu de *Pizza Doces* e adicionar uma pizza desse sabor                                                                                                  Digite *7* para abrir o menu de *Pizzas Tradicionais* e adicionar uma pizza desse sabor";
@@ -398,82 +401,46 @@ if($status == 19){
         close();
       
     }elseif($msg == '3010'|| $msg == '3011'|| $msg == '3012'|| $msg == '3013'|| $msg == '3014'|| $msg == '3015'){
-        #Buca o número de pedido atual
-        $sql = "SELECT * FROM pedido WHERE telefone ='$telefone_cliente'";  
-        $num_pedido = $conn -> query($sql);
-        $dados = mysqli_fetch_array($num_pedido);
-            
-        $pedido_atual = $dados['num_pedido'];
-    
-        #Faz a atualização com o número do lanche do pedido
-        $sql = "UPDATE pedido SET pizza_doce = '$msg' WHERE num_pedido = '$pedido_atual'";
-        $query = mysqli_query($conn, $sql);
+       #Buca o número de pedido atual
+       $sql = "SELECT * FROM pedido WHERE telefone ='$telefone_cliente'";  
+       $num_pedido = $conn -> query($sql);
+       $dados = mysqli_fetch_array($num_pedido);
+           
+       $pedido_atual = $dados['num_pedido'];
+       $pizza_tradicinal_cliente = $dados['pizza_tradicional'];
+       $pizza2_tradicional_cliente = $dados['pizza_tradicional2'];
+       $pizza_doce_cliente = $dados['pizza_doce'];
+       $pizza2_doce_cliente = $dados['pizza_doce2'];
+       $bebida_cliente = $dados['bebida_pedido'];
+       $preco_atual2 = 0;   
+   
+       #Faz a atualização com o número do lanche do pedido
 
-        $status_inicial = '0';
+           if($pizza2_doce_cliente == 0){
+               $sql = "UPDATE pedido SET pizza_doce2 = '$msg' WHERE num_pedido = '$pedido_atual'";
+               $query = mysqli_query($conn, $sql);
+           }else{
+               $sql = "UPDATE pedido SET pizza_doce = '$msg' WHERE num_pedido = '$pedido_atual'";
+               $query = mysqli_query($conn, $sql);
+           }
 
-        $sql = "UPDATE usuario SET status = '$status_inicial' WHERE telefone = '$telefone_cliente'";
-        $query = mysqli_query($conn, $sql);
+       #Buca o número de pedido atual
+       
+       $sql = "SELECT * FROM pedido WHERE telefone ='$telefone_cliente'";
+       $num_pedido = $conn -> query($sql);
+       $dados = mysqli_fetch_array($num_pedido);
 
-        
-        $pizza_tradicinal_cliente = $dados['pizza_tradicional'];
-        $pizza_doce_cliente = $dados['pizza_doce'];
-        $bebida_cliente =$dados['bebida_pedido'];
+       $pedido_atual = $dados['num_pedido'];
 
-        #Buca o número de pedido atual
-        $sql = "SELECT * FROM pedido WHERE telefone ='$telefone_cliente'";
-        $num_pedido = $conn -> query($sql);
-        $dados = mysqli_fetch_array($num_pedido);
+       echo $menu7;
 
-        $pedido_atual = $dados['num_pedido'];
+       $sql = "SELECT * FROM pedido WHERE telefone ='$telefone_cliente'";
+       $num_pedido = $conn -> query($sql);
+       $dados = mysqli_fetch_array($num_pedido);
+       
+       echo "\nSeu pedido é: ".$dados['num_pedido'];
 
-        $sql = "SELECT * FROM pedido WHERE telefone ='$telefone_cliente'";
-        $num_pedido = $conn -> query($sql);
-        $dados = mysqli_fetch_array($num_pedido);
-        
-        echo 'Seu pedido é: '.$dados['num_pedido'];
-
-        $pizza_tradicinal_cliente = $dados['pizza_tradicional'];
-        $pizza_doce_cliente = $dados['pizza_doce'];
-        $bebida_cliente =$dados['bebida_pedido'];
-
-        #Busca do preco do pedido em duas tabelas
-
-        $sql = "SELECT * FROM preco WHERE id_pizza ='$pizza_tradicinal_cliente'";
-        $preco_produto = $conn -> query($sql);
-        $dados_preco_pizza_tradicional = mysqli_fetch_array($preco_produto);
-
-        $preco_atual = 0;
-        
-        if($dados_preco_pizza_tradicional == true){
-            $preco_produto1 = $dados_preco_pizza_tradicional['preco_produto'];
-            $preco_atual += $preco_produto1;
-        }
-
-        # Pizza Doce
-
-        $sql = "SELECT * FROM preco WHERE id_pizza ='$pizza_doce_cliente'";
-        $preco_produto = $conn -> query($sql);
-        $dados_preco_pizza_doce = mysqli_fetch_array($preco_produto);
-
-        if($dados_preco_pizza_doce == true){
-            $preco_produto2 = $dados_preco_pizza_doce['preco_produto'];
-            $preco_atual += $preco_produto2;
-        }
-
-        #Bebida
-
-        $sql = "SELECT * FROM preco WHERE id_pizza ='$bebida_cliente'";
-        $preco_produto = $conn -> query($sql);
-        $dados_preco_bebida = mysqli_fetch_array($preco_produto);
-
-        if($dados_preco_bebida == true){
-            $preco_bebida = $dados_preco_bebida['preco_produto'];
-            $preco_atual += $preco_bebida;
-        }
-
-        echo "\nO preco total do pedido em ficou em *R$$preco_atual*";
-
-        echo "\nPizza adicionada no pedido, obrigado pelo contato";  
+       somar();
         
     }else{
        
@@ -507,17 +474,13 @@ if($status == 20){
     
         #Faz a atualização com o número do lanche do pedido
 
-            if($pizza2_tradicional_cliente == false){
+            if($pizza2_tradicional_cliente == 0){
                 $sql = "UPDATE pedido SET pizza_tradicional2 = '$msg' WHERE num_pedido = '$pedido_atual'";
                 $query = mysqli_query($conn, $sql);
+            }else{
+                $sql = "UPDATE pedido SET pizza_tradicional = '$msg' WHERE num_pedido = '$pedido_atual'";
+                $query = mysqli_query($conn, $sql);
             }
-    
-
-        #volta status inicial
-        $status_inicial = '0';
-
-        $sql = "UPDATE usuario SET status = '$status_inicial' WHERE telefone = '$telefone_cliente'";
-        $query = mysqli_query($conn, $sql);
 
         #Buca o número de pedido atual
         
@@ -535,67 +498,7 @@ if($status == 20){
         
         echo 'Seu pedido é: '.$dados['num_pedido'];
 
-        #Busca do preco do pedido em duas tabelas
-       
-
-        #tradicional 2
-  
-        $sql = "SELECT * FROM preco WHERE id_pizza ='$pizza2_tradicional_cliente'";
-        $preco_produto = $conn -> query($sql);
-        $dados_preco_pizza2_tradicional = mysqli_fetch_array($preco_produto);
-
-            if($dados_preco_pizza2_tradicional == true){
-                
-                $preco_produto4 = $dados_preco_pizza2_tradicional['preco_produto'];
-                $preco_atual2 += $preco_produto4;
-
-                echo "\n*Entrei nessa parte da segunda pizza*";
-            }else{
-                echo "\n*Não entrei na parte da segunda pizza*";
-            }
-
-        
-         
-        #tradicional 1
-
-        $sql = "SELECT * FROM preco WHERE id_pizza ='$pizza_tradicinal_cliente'";
-        $preco_produto = $conn -> query($sql);
-        $dados_preco_pizza_tradicional = mysqli_fetch_array($preco_produto);
-
-        if($dados_preco_pizza_tradicional == true){
-            $preco_produto1 = $dados_preco_pizza_tradicional['preco_produto'];
-            $preco_atual2 += $preco_produto1;
-        }
-
-        # Pizza Doce
-
-        $sql = "SELECT * FROM preco WHERE id_pizza ='$pizza_doce_cliente'";
-        $preco_produto = $conn -> query($sql);
-        $dados_preco_pizza_doce = mysqli_fetch_array($preco_produto);
-
-        if($dados_preco_pizza_doce == true){
-            $preco_produto2 = $dados_preco_pizza_doce['preco_produto'];
-            $preco_atual2 += $preco_produto2;
-        }
-
-        #Bebida
-
-        $sql = "SELECT * FROM preco WHERE id_pizza ='$bebida_cliente'";
-        $preco_produto = $conn -> query($sql);
-        $dados_preco_bebida = mysqli_fetch_array($preco_produto);
-
-        if($dados_preco_bebida == true){
-            $preco_bebida = $dados_preco_bebida['preco_produto'];
-            $preco_atual2 += $preco_bebida;
-        }
-
-        #Segunda pizza
-
-        
-
-        echo "\nO preco total do pedido em ficou em *R$$preco_atual2*";
-
-        echo "\nPizza adicionada no pedido, obrigado pelo contato";  
+        somar();
     
     }else{
        
@@ -745,5 +648,119 @@ function close(){
         $query = mysqli_query($conn, $sql);
 
         echo "Atendimento encerrado, obrigado pelo contato";
+    }
+
+
+    function somar(){
+
+        $servidor = 'localhost';    
+        $usuario = 'root';
+        $senha = '';
+        $banco = 'bot';
+        $conn = mysqli_connect($servidor,$usuario,$senha,$banco);
+
+        $msg = $_GET['msg'];
+        $telefone_cliente = $_GET['telefone'];
+
+
+        #Buca o número de pedido atual
+        $sql = "SELECT * FROM pedido WHERE telefone ='$telefone_cliente'";  
+        $num_pedido = $conn -> query($sql);
+        $dados = mysqli_fetch_array($num_pedido);
+            
+        $pedido_atual = $dados['num_pedido'];
+        $pizza_tradicinal_cliente = $dados['pizza_tradicional'];
+        $pizza2_tradicional_cliente = $dados['pizza_tradicional2'];
+        $pizza_doce_cliente = $dados['pizza_doce'];
+        $pizza2_doce_cliente = $dados['pizza_doce2'];
+        $bebida_cliente = $dados['bebida_pedido'];
+        $preco_atual2 = 0;   
+    
+        #volta status inicial
+        
+        $status_inicial = '0';
+
+        $sql = "UPDATE usuario SET status = '$status_inicial' WHERE telefone = '$telefone_cliente'";
+        $query = mysqli_query($conn, $sql);
+        
+        #Busca do preco do pedido em duas tabelas
+       
+
+        #tradicional 2
+  
+        $sql = "SELECT * FROM preco WHERE id_pizza ='$pizza2_tradicional_cliente'";
+        $preco_produto = $conn -> query($sql);
+        $dados_preco_pizza2_tradicional = mysqli_fetch_array($preco_produto);
+
+            if($dados_preco_pizza2_tradicional == true){
+                
+                $preco_produto4 = $dados_preco_pizza2_tradicional['preco_produto'];
+                $preco_atual2 += $preco_produto4;
+            }
+
+        
+        # Pizza Doce 2
+
+        $sql = "SELECT * FROM preco WHERE id_pizza ='$pizza2_doce_cliente'";
+        $preco_produto = $conn -> query($sql);
+        $dados_preco_pizza2_doce = mysqli_fetch_array($preco_produto);
+
+            if($dados_preco_pizza2_doce == true){
+                
+                $preco_produto5 = $dados_preco_pizza2_doce['preco_produto'];
+                $preco_atual2 += $preco_produto5;
+            }
+
+
+
+
+        #tradicional 1
+
+        $sql = "SELECT * FROM preco WHERE id_pizza ='$pizza_tradicinal_cliente'";
+        $preco_produto = $conn -> query($sql);
+        $dados_preco_pizza_tradicional = mysqli_fetch_array($preco_produto);
+
+        if($dados_preco_pizza_tradicional == true){
+            $preco_produto1 = $dados_preco_pizza_tradicional['preco_produto'];
+            $preco_atual2 += $preco_produto1;
+        }
+
+        # Pizza Doce
+
+        $sql = "SELECT * FROM preco WHERE id_pizza ='$pizza_doce_cliente'";
+        $preco_produto = $conn -> query($sql);
+        $dados_preco_pizza_doce = mysqli_fetch_array($preco_produto);
+
+        if($dados_preco_pizza_doce == true){
+            $preco_produto2 = $dados_preco_pizza_doce['preco_produto'];
+            $preco_atual2 += $preco_produto2;
+        }
+
+        #Bebida
+
+        $sql = "SELECT * FROM preco WHERE id_pizza ='$bebida_cliente'";
+        $preco_produto = $conn -> query($sql);
+        $dados_preco_bebida = mysqli_fetch_array($preco_produto);
+
+        if($dados_preco_bebida == true){
+            $preco_bebida = $dados_preco_bebida['preco_produto'];
+            $preco_atual2 += $preco_bebida;
+        }
+
+        echo "\nO preco total do pedido em ficou em *R$$preco_atual2*";
+
+
+        #Adiciona o valor do pedido ao banco;
+
+        $sql = "SELECT * FROM pedido WHERE telefone ='$telefone_cliente'";  
+        $num_pedido = $conn -> query($sql);
+        $dados = mysqli_fetch_array($num_pedido);
+
+        $sql = "UPDATE pedido SET valor_pedido = '$preco_atual2' WHERE num_pedido = '$pedido_atual'";
+        $query = mysqli_query($conn, $sql);
+        
+
+        echo "\nAtendimento encerrado, obrigado pelo contato";
+
     }
 ?>
