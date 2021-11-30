@@ -275,7 +275,15 @@ if($status == 5){
         cancel_and_end();
     }else{
         echo $menu5;
-    $resposta = $menu5 ;
+
+        $sql = "SELECT * FROM pedido WHERE telefone ='$telefone_cliente'";
+        $num_pedido = $conn -> query($sql);
+        $dados = mysqli_fetch_array($num_pedido);
+
+        $pedido_atual = $dados['num_pedido'];
+
+        $sql = "UPDATE pedido SET endereco = '$msg' WHERE num_pedido = '$pedido_atual'";
+        $query = mysqli_query($conn, $sql);
     }
 }
 
@@ -285,7 +293,15 @@ if($status == 6){
         cancel_and_end();
     }else{
         echo $menu6;
-        $resposta = $menu6 ;
+        
+        $sql = "SELECT * FROM pedido WHERE telefone ='$telefone_cliente'";
+        $num_pedido = $conn -> query($sql);
+        $dados = mysqli_fetch_array($num_pedido);
+
+        $pedido_atual = $dados['num_pedido'];
+
+        $sql = "UPDATE pedido SET ponto_referencia = '$msg' WHERE num_pedido = '$pedido_atual'";
+        $query = mysqli_query($conn, $sql);
     }
 }
 
