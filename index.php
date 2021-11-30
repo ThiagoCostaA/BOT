@@ -50,7 +50,7 @@ $data = date('d-m-Y');
 $msg = $_GET['msg'];
 $telefone_cliente = $_GET['telefone'];
 
-$sql = "SELECT * FROM pedido WHERE telefone ='$telefone_cliente'";  
+$sql = "SELECT * FROM `pedido` order by num_pedido asc limit 1";  
 $num_pedido = $conn -> query($sql);
 $dados = mysqli_fetch_array($num_pedido);
 
@@ -499,23 +499,28 @@ if($status == 20){
         $dados = mysqli_fetch_array($num_pedido);
             
         $pedido_atual = $dados['num_pedido'];
+        $pizza_tradicinal_cliente = $dados['pizza_tradicional'];
+        $pizza2_tradicional_cliente = $dados['pizza_tradicional2'];
+        $pizza_doce_cliente = $dados['pizza_doce'];
+        $bebida_cliente = $dados['bebida_pedido'];
+        $preco_atual2 = 0;   
     
         #Faz a atualização com o número do lanche do pedido
-        $sql = "UPDATE pedido SET pizza_tradicional = '$msg' WHERE num_pedido = '$pedido_atual'";
-        $query = mysqli_query($conn, $sql);
 
+            if($pizza2_tradicional_cliente == false){
+                $sql = "UPDATE pedido SET pizza_tradicional2 = '$msg' WHERE num_pedido = '$pedido_atual'";
+                $query = mysqli_query($conn, $sql);
+            }
+    
+
+        #volta status inicial
         $status_inicial = '0';
 
         $sql = "UPDATE usuario SET status = '$status_inicial' WHERE telefone = '$telefone_cliente'";
         $query = mysqli_query($conn, $sql);
 
-        
-        $pizza_tradicinal_cliente = $dados['pizza_tradicional'];
-        $pizza_doce_cliente = $dados['pizza_doce'];
-        $bebida_cliente =$dados['bebida_pedido'];
-
-       
         #Buca o número de pedido atual
+        
         $sql = "SELECT * FROM pedido WHERE telefone ='$telefone_cliente'";
         $num_pedido = $conn -> query($sql);
         $dados = mysqli_fetch_array($num_pedido);
@@ -530,21 +535,36 @@ if($status == 20){
         
         echo 'Seu pedido é: '.$dados['num_pedido'];
 
-        $pizza_tradicinal_cliente = $dados['pizza_tradicional'];
-        $pizza_doce_cliente = $dados['pizza_doce'];
-        $bebida_cliente =$dados['bebida_pedido'];
-
         #Busca do preco do pedido em duas tabelas
+       
+
+        #tradicional 2
+  
+        $sql = "SELECT * FROM preco WHERE id_pizza ='$pizza2_tradicional_cliente'";
+        $preco_produto = $conn -> query($sql);
+        $dados_preco_pizza2_tradicional = mysqli_fetch_array($preco_produto);
+
+            if($dados_preco_pizza2_tradicional == true){
+                
+                $preco_produto4 = $dados_preco_pizza2_tradicional['preco_produto'];
+                $preco_atual2 += $preco_produto4;
+
+                echo "\n*Entrei nessa parte da segunda pizza*";
+            }else{
+                echo "\n*Não entrei na parte da segunda pizza*";
+            }
+
+        
+         
+        #tradicional 1
 
         $sql = "SELECT * FROM preco WHERE id_pizza ='$pizza_tradicinal_cliente'";
         $preco_produto = $conn -> query($sql);
         $dados_preco_pizza_tradicional = mysqli_fetch_array($preco_produto);
 
-        $preco_atual = 0;
-        
         if($dados_preco_pizza_tradicional == true){
             $preco_produto1 = $dados_preco_pizza_tradicional['preco_produto'];
-            $preco_atual += $preco_produto1;
+            $preco_atual2 += $preco_produto1;
         }
 
         # Pizza Doce
@@ -555,7 +575,7 @@ if($status == 20){
 
         if($dados_preco_pizza_doce == true){
             $preco_produto2 = $dados_preco_pizza_doce['preco_produto'];
-            $preco_atual += $preco_produto2;
+            $preco_atual2 += $preco_produto2;
         }
 
         #Bebida
@@ -566,10 +586,14 @@ if($status == 20){
 
         if($dados_preco_bebida == true){
             $preco_bebida = $dados_preco_bebida['preco_produto'];
-            $preco_atual += $preco_bebida;
+            $preco_atual2 += $preco_bebida;
         }
 
-        echo "\nO preco total do pedido em ficou em *R$$preco_atual*";
+        #Segunda pizza
+
+        
+
+        echo "\nO preco total do pedido em ficou em *R$$preco_atual2*";
 
         echo "\nPizza adicionada no pedido, obrigado pelo contato";  
     
